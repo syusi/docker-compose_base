@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  image1:
+    build:
+      # docker-buildするときに使う物たち
+      context: .
+      dockerfile: ./image1/Dockerfile
+      args:
+        ENV1: $BUILD_ENV_VAR1
+        ENV2: $BUILD_ENV_VAR2
+    
+    image: image:tag
+    ports:
+      - "${PORT1}:${PORT1}"
+    # volumes:
+    #   - ./mount:/root/dir/mount
+
+    command: >
+      bash -c "cd && git fetch --purne && git pull origin master && echo 'exec'"
+
+    environment:
+      - BRAHCN=${BRANCH}
+      - TZ=Asia/Tokyo
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+
+  image2:
+    image: hello-world:latest
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+
+    
+    
